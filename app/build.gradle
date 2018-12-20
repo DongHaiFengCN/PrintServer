@@ -21,5 +21,11 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation project(':mylibrary')
+  //  implementation project(':mylibrary')
+    implementation files('libs/gprintersdkv1.jar')
+    api 'com.yanzhenjie.andserver:api:2.0.2'
+    annotationProcessor 'com.yanzhenjie.andserver:processor:2.0.1'
+    api 'com.squareup.okhttp3:okhttp:3.12.0'
+    api 'com.google.code.gson:gson:2.8.5'
+    implementation files('libs/gprintersdkv1.jar')
 }

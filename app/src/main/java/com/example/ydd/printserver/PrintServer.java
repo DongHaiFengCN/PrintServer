@@ -1,4 +1,4 @@
-package com.example.ydd.mylibrary;
+package com.example.ydd.printserver;
 
 import android.app.Service;
 import android.content.Intent;
@@ -11,6 +11,13 @@ import com.yanzhenjie.andserver.Server;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author dong
+ *
+ * 说明：{启动一个后台打印服务器，需要常驻，保活}
+ *
+ */
+
 public class PrintServer extends Service {
 
     private Server mServer;
@@ -19,7 +26,7 @@ public class PrintServer extends Service {
     @Override
     public void onCreate() {
 
-        Log.e("DOAING","创建了");
+        Log.e("DOAING","启动后台打印服务");
 
         mServer = AndServer.serverBuilder()
                 .inetAddress(NetUtils.getLocalIPAddress())
@@ -29,7 +36,7 @@ public class PrintServer extends Service {
                     @Override
                     public void onStarted() {
 
-                        Log.e("DOAING","打印服务开启了");
+                        Log.e("DOAING","打印服务开启");
                     }
 
                     @Override
@@ -49,8 +56,6 @@ public class PrintServer extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         mServer.startup();
 
-        Log.e("DOAING",Thread.currentThread().getId()+"");
-
         return START_STICKY;
     }
 
@@ -58,7 +63,7 @@ public class PrintServer extends Service {
     public void onDestroy() {
         super.onDestroy();
         mServer.shutdown();
-        Log.e("DOAING","停止了～");
+        Log.e("DOAING","后台打印服务停止");
 
     }
 

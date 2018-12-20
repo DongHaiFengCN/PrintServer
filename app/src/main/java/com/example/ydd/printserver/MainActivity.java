@@ -3,14 +3,12 @@ package com.example.ydd.printserver;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.telecom.Call;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.ydd.mylibrary.NetUtils;
-import com.example.ydd.mylibrary.PrintBill;
-import com.example.ydd.mylibrary.PrintMerchandise;
-import com.example.ydd.mylibrary.PrintServer;
+
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -19,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import okhttp3.Call;
+
 import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -27,25 +25,31 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+
 public class MainActivity extends Activity {
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
     OkHttpClient client;
-    Intent intent;
-    public static final String printerServerUrl ="http://192.168.2.111:8080/order";
+
+
+
+    public String printerServerUrl;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         client = new OkHttpClient();
 
+        printerServerUrl = "http://192.168.2.111:8080/order";
 
         final PrintBill printBill = new PrintBill();
 
         printBill.setPeopleNum("3");
 
         printBill.setIp("192.168.2.110");
+       // printBill.setIp("");
 
         printBill.setTableNumber("五号桌");
 
@@ -96,9 +100,6 @@ public class MainActivity extends Activity {
 
         ip.setText(NetUtils.getLocalIPAddress().getHostAddress());
 
-        intent = new Intent(this, PrintServer.class);
-
-        startService(intent);
 
         findViewById(R.id.start).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,15 +112,16 @@ public class MainActivity extends Activity {
 
                 client.newCall(request).enqueue(new Callback() {
                     @Override
-                    public void onFailure(Call call, IOException e) {
-                        Log.e("DOAING", e.getMessage());
+                    public void onFailure(okhttp3.Call call, IOException e) {
+
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(okhttp3.Call call, Response response) throws IOException {
 
-                      Log.e("DOAING", response.body().string());
                     }
+
+
                 });
             }
         });
@@ -134,15 +136,16 @@ public class MainActivity extends Activity {
                         .build();
                 client.newCall(request).enqueue(new Callback() {
                     @Override
-                    public void onFailure(Call call, IOException e) {
-                        Log.e("DOAING", e.getMessage());
+                    public void onFailure(okhttp3.Call call, IOException e) {
+
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(okhttp3.Call call, Response response) throws IOException {
 
-                        Log.e("DOAING", response.body().string());
                     }
+
+
                 });
 
 
@@ -153,30 +156,15 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                post(printerServerUrl,gson.toJson(printBill));
+                post(printerServerUrl, gson.toJson(printBill));
 
             }
         });
 
 
-
-
-
-
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        stopService(intent);
-
-
     }
 
     void post(String url, String json) {
-
-
 
         RequestBody body = RequestBody.create(JSON, json);
         Request request = new Request.Builder()
@@ -186,15 +174,16 @@ public class MainActivity extends Activity {
 
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                Log.e("DOAING", e.getMessage());
+            public void onFailure(okhttp3.Call call, IOException e) {
+
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(okhttp3.Call call, Response response) throws IOException {
 
-                Log.e("DOAING", response.body().string());
             }
+
+
         });
 
     }
