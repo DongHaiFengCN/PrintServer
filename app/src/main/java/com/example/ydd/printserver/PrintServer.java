@@ -54,14 +54,17 @@ public class PrintServer extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mServer.startup();
 
+
+        mServer.startup();
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+
         mServer.shutdown();
         Log.e("DOAING","后台打印服务停止");
 

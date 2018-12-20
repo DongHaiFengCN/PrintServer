@@ -63,7 +63,7 @@ public class Printer {
             // 设置打印居中
             esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER);
             // 设置为倍高倍宽
-            esc.addSelectPrintModes(EscCommand.FONT.FONTB, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF);
+            esc.addSelectPrintModes(EscCommand.FONT.FONTA, EscCommand.ENABLE.OFF, EscCommand.ENABLE.ON, EscCommand.ENABLE.ON, EscCommand.ENABLE.OFF);
 
             esc.addText(printBill.getTableNumber());
             esc.addPrintAndFeedLines((byte) 2);
@@ -74,11 +74,11 @@ public class Printer {
             esc.addPrintAndLineFeed();
             // 打印文字
 
-            分单(list, esc, printBill);
+            distribute(list, esc, printBill);
 
-            esc.addText("####################################################");
+            esc.addText("#############################################\n\n\n\n\n\n\n\n\n\n");
 
-            esc.addPrintAndFeedLines((byte) 8);
+            /*esc.addPrintAndFeedLines((byte) 4);*/
 
             Vector<Byte> datas = esc.getCommand();
 
@@ -92,13 +92,13 @@ public class Printer {
 
         } else {
 
-            分单(list, null, printBill);
+            distribute(list, null, printBill);
         }
 
 
     }
 
-    private void 分单(List<PrintMerchandise> list, EscCommand esc, PrintBill printBill) {
+    private void distribute(List<PrintMerchandise> list, EscCommand esc, PrintBill printBill) {
         for (PrintMerchandise p : list) {
 
 
@@ -162,21 +162,6 @@ public class Printer {
 
     }
 
-    @GetMapping("/test")
-    public void test(HttpResponse response) {
-
-
-        String json = "{\n" +
-                "      \"channelId\": \"f4b572c2\",\n" +
-                "      \"className\": \"Area\",\n" +
-                "      \"name\": \"房间1\"\n" +
-                "    }";
-
-        ResponseBody body = new StringBody(json);
-        response.setBody(body);
-
-    }
-
     @GetMapping("/stop")
     public void stop() {
 
@@ -197,12 +182,9 @@ public class Printer {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         if (gson == null) {
-
             gson = new Gson();
         }
-
         List<String> stringList = gson.fromJson(json, new TypeToken<List<String>>() {
         }.getType());
         EthernetPort ethernetPort;

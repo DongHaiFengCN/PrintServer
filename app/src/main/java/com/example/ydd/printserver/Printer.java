@@ -1,5 +1,7 @@
 package com.example.ydd.printserver;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.gprinter.command.EscCommand;
@@ -107,7 +109,6 @@ public class Printer {
 
             if (esc != null) {
 
-
                 esc.addPrintAndFeedLines((byte) 1);
                 esc.addSetAbsolutePrintPosition((short) 4);
                 esc.addText(p.getName());
@@ -174,6 +175,8 @@ public class Printer {
 
         for (Map.Entry<String, EthernetPort> entry : ethernetPortHashMap.entrySet()) {
 
+
+            Log.e("DOAING","关闭了："+entry.getKey());
             entry.getValue().closePort();
         }
         ethernetPortHashMap.clear();
@@ -203,6 +206,8 @@ public class Printer {
                 ethernetPort = new EthernetPort(ip, 9100);
                 if (ethernetPort.openPort()) {
                     ethernetPortHashMap.put(ip, ethernetPort);
+
+                    Log.e("DOAING","打开了："+ip);
                 } else {
                     if (fail == null) {
                         fail = new ArrayList();

@@ -49,7 +49,6 @@ public class MainActivity extends Activity {
         printBill.setPeopleNum("3");
 
         printBill.setIp("192.168.2.110");
-       // printBill.setIp("");
 
         printBill.setTableNumber("五号桌");
 
@@ -119,6 +118,8 @@ public class MainActivity extends Activity {
                     @Override
                     public void onResponse(okhttp3.Call call, Response response) throws IOException {
 
+
+                        Log.e("DOAING",response.body().string());
                     }
 
 
