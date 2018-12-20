@@ -1,4 +1,4 @@
-package com.example.ydd.printserver;
+package com.example.ydd.myserver;
 
 import android.util.Log;
 
@@ -14,8 +14,9 @@ import com.yanzhenjie.andserver.http.HttpResponse;
 import com.yanzhenjie.andserver.http.RequestBody;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.net.Socket;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -58,6 +59,9 @@ public class Printer {
 
             EthernetPort ethernetPort = ethernetPortHashMap.get(billIp);
 
+            verifyState(ethernetPort);
+
+
             EscCommand esc = new EscCommand();
 
             esc.addInitializePrinter();
@@ -97,8 +101,84 @@ public class Printer {
 
     }
 
+    private void verifyState(EthernetPort ethernetPort) {
+
+
+        Socket socket = null;
+
+        try {
+            Class<?> clazz = ethernetPort.getClass();
+            //获取有参构造
+
+            try {
+                Field field = clazz.getDeclaredField("mSocket");
+                field.setAccessible(true);
+
+                socket = (Socket) field.get(ethernetPort);
+
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        send(socket);
+
+        //isServerClose(socket);
+
+
+
+
+     /*  if(send(socket)){
+           Log.e("DOAING",socket.toString()+"  连接成功～");
+
+       }else {
+           Log.e("DOAING",socket.toString()+"  连接失败～");
+       }*/
+    }
+
+    /**
+     * 发送数据，发送失败返回false,发送成功返回true
+     *
+     * @return
+     */
+    public void send(Socket socket) {
+        try {
+            /*PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            out.println("测试--");*/
+
+            socket.getOutputStream().write(0xff);
+            socket.getOutputStream().flush();
+            Log.e("DOAING", "发送了");
+
+        } catch (Exception se) {
+            se.printStackTrace();
+            Log.e("DOAING", "没发送");
+        }
+    }
+
+    /*  *//**
+     * 判断是否断开连接，断开返回true,没有返回false
+     * @param socket
+     * @return
+     *//*
+    public Boolean isServerClose(Socket socket){
+        try{
+            socket.sendUrgentData(0xFF);//发送1个字节的紧急数据，默认情况下，服务器端没有开启紧急数据处理，不影响正常通信
+
+            Log.e("DOAING","开着");
+            return false;
+        }catch(Exception se){
+            Log.e("DOAING","关了");
+            return true;
+        }
+    }*/
+
     /**
      * 分单打印
+     *
      * @param list
      * @param esc
      * @param printBill
@@ -122,6 +202,8 @@ public class Printer {
             String ip = p.getIp();
 
             EthernetPort ethernetPort1 = ethernetPortHashMap.get(ip);
+
+            verifyState(ethernetPort1);
             EscCommand esc1 = new EscCommand();
             esc1.addInitializePrinter();
             esc1.addSelectJustification(EscCommand.JUSTIFICATION.CENTER);
@@ -153,7 +235,8 @@ public class Printer {
     }
 
     /**
-     *  结账单的打印 checkOrder
+     * 结账单的打印 checkOrder
+     *
      * @param body
      */
     @PostMapping("/check_order")
@@ -166,7 +249,7 @@ public class Printer {
             e.printStackTrace();
         }
 
-      //  gson.fromJson(json,);
+        //  gson.fromJson(json,);
 
     }
 
@@ -176,7 +259,7 @@ public class Printer {
         for (Map.Entry<String, EthernetPort> entry : ethernetPortHashMap.entrySet()) {
 
 
-            Log.e("DOAING","关闭了："+entry.getKey());
+            Log.e("DOAING", "关闭了：" + entry.getKey());
             entry.getValue().closePort();
         }
         ethernetPortHashMap.clear();
@@ -207,7 +290,7 @@ public class Printer {
                 if (ethernetPort.openPort()) {
                     ethernetPortHashMap.put(ip, ethernetPort);
 
-                    Log.e("DOAING","打开了："+ip);
+                    Log.e("DOAING", "打开了：" + ip);
                 } else {
                     if (fail == null) {
                         fail = new ArrayList();

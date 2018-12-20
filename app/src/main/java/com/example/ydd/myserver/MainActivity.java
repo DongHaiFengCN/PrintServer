@@ -1,9 +1,7 @@
-package com.example.ydd.printserver;
+package com.example.ydd.myserver;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.telecom.Call;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -48,7 +46,7 @@ public class MainActivity extends Activity {
 
         printBill.setPeopleNum("3");
 
-        printBill.setIp("192.168.2.110");
+        printBill.setIp("");
 
         printBill.setTableNumber("五号桌");
 
@@ -79,7 +77,7 @@ public class MainActivity extends Activity {
 
         printMerchandise2.setSum("33");
 
-        printMerchandiseList.add(printMerchandise1);
+        //printMerchandiseList.add(printMerchandise1);
 
         printMerchandiseList.add(printMerchandise2);
 

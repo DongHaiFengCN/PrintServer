@@ -1,4 +1,4 @@
-package com.example.ydd.printserver;
+package com.example.ydd.myserver;
 
 import android.app.Application;
 import android.content.Intent;

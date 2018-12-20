@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.ydd.mylibrary;
+package com.example.ydd.myserver;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
